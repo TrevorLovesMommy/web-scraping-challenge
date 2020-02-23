@@ -86,7 +86,8 @@ def scrape():
 
     #read html tables with pandas
     tables = pd.read_html(space_fact_url)
-    facts_table=tables[0].to_html()
+    facts_table=tables[0].to_html().replace('\n','')
+   
 
     #------------------ 4 hemisphere images ------------------
     

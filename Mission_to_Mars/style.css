@@ -1,0 +1,8 @@
+.inline_content{
+    display:  inline_block;
+}
+
+.inline_featured_image {
+    display: inline-block;
+    width: 600px;
+  } 
