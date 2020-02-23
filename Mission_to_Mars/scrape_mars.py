@@ -1,6 +1,7 @@
 from splinter import Browser
 from bs4 import BeautifulSoup
 import time
+import pandas as pd
 
 def init_browser():
     executable_path = {'executable_path': 'chromedriver.exe'}
@@ -9,7 +10,7 @@ def init_browser():
 def scrape():
     
     #Scrape 4 sites and aggregate all data into one dictionary
-    
+
     #set browser for scraping
     browser = init_browser()
     
@@ -18,6 +19,8 @@ def scrape():
     
     #------------scrape nasa mars news site ------------------
     
+    print("scraping for mars news")
+
     #set URL
     url = 'https://mars.nasa.gov/news/?page=0&per_page=40&order=publish_date+desc%2Ccreated_at+desc&search=&category=19%2C165%2C184%2C204&blank_scope=Latest'
     browser.visit(url)
@@ -25,13 +28,19 @@ def scrape():
     #scrape html with beautiful soup
     html = browser.html
     soup = BeautifulSoup(html, 'lxml')
+
     nasa_title = soup.find('div', class_='content_title').text
-    #set delay to allow time for page to load
-    time.sleep(20)
+
+    #set 10 sec delay to finish scraping above content
+    time.sleep(40)
+
     nasa_paragraph = soup.find('div', class_='article_teaser_body').text
-       
+
+    print(nasa_title)
+    print(nasa_paragraph)
     #------------ scrape jpl mars news site for featured image ------------------
         
+    print("scraping for featured image")    
     #set url of site
     url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
     browser.visit(url)
@@ -55,6 +64,7 @@ def scrape():
     #------------ scrape mars weather from twitter  ------------------
     
     #set twitter url
+    print("scraping twitter")
     url = 'https://twitter.com/marswxreport?lang=en'
     browser.visit(url)
 
