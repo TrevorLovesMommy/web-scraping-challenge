@@ -78,25 +78,60 @@ def scrape():
    
     #---------------- scrape space-facts.com for table content ------------
 
+    #scrape table and convert into html string
     #set url of site
     space_fact_url = 'https://space-facts.com/mars/'
 
-    #set delay to allow time for page to load
     time.sleep(10)
 
     #read html tables with pandas
     tables = pd.read_html(space_fact_url)
-    facts_table=tables[0].to_html().replace('\n','')
-   
+    facts_table = (tables[0])
+    facts_table.columns=["Description", "Value"]
+
+    facts_table=facts_table.to_html(index=False).replace('\n','')
 
     #------------------ 4 hemisphere images ------------------
     
+    #set url
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+
+    #Scrape images
+    browser.visit(url)
+    browser.click_link_by_partial_text('Cerberus')
+    html = browser.html
+    soup = BeautifulSoup(html, 'lxml')
+    cerberus_img_url = soup.find('body').find('img', class_ = 'wide-image')['src']
+    cerberus_img_url = f"https://astrogeology.usgs.gov{cerberus_img_url}"
+
+    browser.visit(url)
+    browser.click_link_by_partial_text('Schiaparelli')
+    html = browser.html
+    soup = BeautifulSoup(html, 'lxml')
+    schiaparelli_img_url = soup.find('body').find('img', class_ = 'wide-image')['src']
+    schiaparelli_img_url = f"https://astrogeology.usgs.gov{schiaparelli_img_url}"
+
+    browser.visit(url)
+    browser.click_link_by_partial_text('Syrtis')
+    html = browser.html
+    soup = BeautifulSoup(html, 'lxml')
+    syrtis_img_url = soup.find('body').find('img', class_ = 'wide-image')['src']
+    syrtis_img_url = f"https://astrogeology.usgs.gov{syrtis_img_url}"
+
+    browser.visit(url)
+    browser.click_link_by_partial_text('Valles')
+    html = browser.html
+    soup = BeautifulSoup(html, 'lxml')
+    valles_img_url = soup.find('body').find('img', class_ = 'wide-image')['src']
+    valles_img_url = f"https://astrogeology.usgs.gov{valles_img_url}"
+
     hemisphere_image_urls=[
-    {"title":"Cerberus Hemisphere", "img_url":"https://astrogeology.usgs.gov/cache/images/cfa62af2557222a02478f1fcd781d445_cerberus_enhanced.tif_full.jpg"},
-    {"title":"Schiaparelli Hemisphere", "img_url":"https://astrogeology.usgs.gov/cache/images/3cdd1cbf5e0813bba925c9030d13b62e_schiaparelli_enhanced.tif_full.jpg"},
-    {"title":"Syrtis Major Hemisphere", "img_url":"https://astrogeology.usgs.gov/cache/images/ae209b4e408bb6c3e67b6af38168cf28_syrtis_major_enhanced.tif_full.jpg"},
-    {"title":"Valles Marineris Hemisphere", "img_url":"https://astrogeology.usgs.gov/cache/images/7cf2da4bf549ed01c17f206327be4db7_valles_marineris_enhanced.tif_full.jpg"}]
-    
+        {"title":"Cerberus Hemisphere", "img_url":cerberus_img_url},
+        {"title":"Schiaparelli Hemisphere", "img_url":schiaparelli_img_url},
+        {"title":"Syrtis Major Hemisphere", "img_url":syrtis_img_url},
+        {"title":"Valles Marineris Hemisphere", "img_url":valles_img_url}
+    ]
+
     #---------------- create dictionary of scraped content ------------
     agg_dictionary = {"nasa_title": nasa_title,
                         "nasa_paragraph": nasa_paragraph,
